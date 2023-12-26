@@ -1,0 +1,40 @@
+function init(self)
+
+	local text = "दिल्ली"
+	local node = gui.get_node("text")
+
+	nativetext.init {
+		max_texture_width = max_size,
+		max_texture_height = max_size
+	}
+
+	local image_resource = nativetext.new {
+		text = text,
+		size = 50,
+		underline = false,
+		spacing_add = 50,
+		align = nativetext.align_center,
+		color = vmath.vector4(0, 0, 0, 1),
+		outline_size = 0,
+		outline_color = vmath.vector4(0, 0, 0, 1),
+		shadow_size = 0,
+		shadow_x = 5,
+		shadow_y = 5,
+		shadow_color = vmath.vector4(0, 0, 0, 0),
+		background_color = vmath.vector4(0, 0, 0, 0)
+	}
+
+
+	local bytes = buffer.get_stream(image_resource.buffer, hash("pixels"))
+	local pixels = {}
+	for i = 1, #bytes do
+		table.insert(pixels, string.char(bytes[i]))
+	end
+
+	local concatenated_pixels = table.concat(pixels)
+	if gui.new_texture("native_text_texture", image_resource.header.width, image_resource.header.height, "rgba", concatenated_pixels, true) then
+		gui.set_texture(node, "native_text_texture")
+    else
+		print("error")
+	end
+end
